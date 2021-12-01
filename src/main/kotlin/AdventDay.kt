@@ -17,5 +17,5 @@ inline fun <reified T> String.value(): T = when (T::class) {
     else -> TODO("Add support to read ${T::class.java.simpleName}")
 }
 
-fun <T> Any?.printIt() = println(this)
+fun Any?.printIt() = println(this)
 
