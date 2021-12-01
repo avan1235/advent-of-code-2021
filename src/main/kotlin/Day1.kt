@@ -6,8 +6,7 @@ object Day1 : AdventDay() {
     }
 
     private fun Sequence<Int>.countIncreases() = windowed(size = 2)
-        .filter { (prev, curr) -> curr > prev }
-        .count()
+        .count { (prev, curr) -> curr > prev }
 
     private fun Sequence<Int>.countSumIncreases(size: Int = 3) = windowed(size)
         .map { it.sum() }
