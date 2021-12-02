@@ -24,9 +24,9 @@ object Day2 : AdventDay() {
 
 private data class Cmd(val dir: Dir, val v: Int)
 private sealed interface Dir
-object Forward : Dir
-object Up : Dir
-object Down : Dir
+private object Forward : Dir
+private object Up : Dir
+private object Down : Dir
 
 private fun String.cmd() = split(" ").takeIf { it.size == 2 }?.let { (dir, v) ->
     when (dir) {
