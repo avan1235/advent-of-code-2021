@@ -13,10 +13,12 @@ object Day4 : AdventDay() {
         }?.let { (b, v) -> b.unmarkedValues().sum() * v }.printIt()
     }
 
-    private fun List<String>.extractOrder() = firstOrNull()?.split(",")?.map { it.value<Int>() }
-        ?: throw IllegalArgumentException("No order defined in data: $this")
+    private fun List<String>.extractOrder() =
+        firstOrNull()?.split(",")?.map { it.value<Int>() }
+            ?: throw IllegalArgumentException("No order defined in data: $this")
 
-    private fun List<String>.extractBoards() = drop(1).groupDividedBy("") { it.toBoard<Int>() }
+    private fun List<String>.extractBoards() =
+        drop(1).groupDividedBy("") { it.toBoard<Int>() }
 }
 
 private class Game<V>(val order: List<V>, val boards: List<Board<V>>) {
@@ -32,7 +34,9 @@ private class Game<V>(val order: List<V>, val boards: List<Board<V>>) {
 }
 
 private inline fun <reified V> List<String>.toBoard() = map { line ->
-    line.splitToSequence("\\s+".toRegex()).filter { it.isNotBlank() }.mapTo(mutableListOf()) { it.value<V>() }
+    line.splitToSequence("\\s+".toRegex())
+        .filter { it.isNotBlank() }
+        .mapTo(mutableListOf()) { it.value<V>() }
 }.let { Board(it) }
 
 private class Board<V>(private val values: List<List<V>>) {
@@ -44,10 +48,14 @@ private class Board<V>(private val values: List<List<V>>) {
     fun wins() = values.wins() || transposedValues.wins()
     fun unmarkedValues() = allValues - markedValues
 
-    private fun List<List<V>>.wins() = any { row -> row.all { it in markedValues } }
+    private fun List<List<V>>.wins() =
+        any { row -> row.all { it in markedValues } }
 }
 
-fun <V> List<String>.groupDividedBy(separator: String, transform: (List<String>) -> V): List<V> = sequence {
+fun <V> List<String>.groupDividedBy(
+    separator: String,
+    transform: (List<String>) -> V
+): List<V> = sequence {
     var curr = mutableListOf<String>()
     forEach { string ->
         when (separator) {
@@ -62,6 +70,7 @@ fun <V> List<String>.groupDividedBy(separator: String, transform: (List<String>)
 }.toList()
 
 fun <T> List<List<T>>.transpose(): List<List<T>> {
-    val n = map { it.size }.toSet().singleOrNull() ?: throw IllegalArgumentException("Invalid data to transpose: $this")
+    val n = map { it.size }.toSet().singleOrNull()
+        ?: throw IllegalArgumentException("Invalid data to transpose: $this")
     return List(n) { y -> List(size) { x -> this[x][y] } }
 }
