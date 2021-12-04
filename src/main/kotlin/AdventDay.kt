@@ -27,7 +27,7 @@ fun <U, V> List<U>.groupDividedBy(
     forEach {
         if (it == separator && curr.isNotEmpty()) yield(transform(curr))
         if (it == separator) curr = mutableListOf()
-        else curr+=it
+        else curr += it
     }
     if (curr.isNotEmpty()) yield(transform(curr))
 }.toList()
