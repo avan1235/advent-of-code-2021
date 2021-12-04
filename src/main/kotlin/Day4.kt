@@ -25,9 +25,7 @@ private class Game<V>(val order: List<V>, val boards: List<Board<V>>) {
     fun simulateSelectingFirst(strategy: (Board<V>) -> Boolean): Pair<Board<V>, V>? {
         for (v in order) {
             boards.forEach { it.mark(v) }
-            for (board in boards) {
-                if (strategy(board)) return Pair(board, v)
-            }
+            boards.firstOrNull(strategy)?.let { return Pair(it, v) }
         }
         return null
     }
