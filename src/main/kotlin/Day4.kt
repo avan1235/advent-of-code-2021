@@ -3,11 +3,11 @@ object Day4 : AdventDay() {
         val lines = reads<String>() ?: return
         val game = Game(lines.extractOrder(), lines.extractBoards())
 
-        game.simulateSelecting { board -> board.wins() }
+        game.simulateSelectingFirst { board -> board.wins() }
             ?.let { (b, v) -> b.unmarkedValues().sum() * v }.printIt()
 
         val leftBoards = game.boards.toMutableSet()
-        game.simulateSelecting { board ->
+        game.simulateSelectingFirst { board ->
             if (board.wins()) leftBoards -= board
             leftBoards.isEmpty()
         }?.let { (b, v) -> b.unmarkedValues().sum() * v }.printIt()
@@ -22,7 +22,7 @@ object Day4 : AdventDay() {
 }
 
 private class Game<V>(val order: List<V>, val boards: List<Board<V>>) {
-    fun simulateSelecting(strategy: (Board<V>) -> Boolean): Pair<Board<V>, V>? {
+    fun simulateSelectingFirst(strategy: (Board<V>) -> Boolean): Pair<Board<V>, V>? {
         for (v in order) {
             boards.forEach { it.mark(v) }
             for (board in boards) {
