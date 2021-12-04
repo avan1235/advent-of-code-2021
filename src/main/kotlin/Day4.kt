@@ -51,26 +51,3 @@ private class Board<V>(private val values: List<List<V>>) {
     private fun List<List<V>>.wins() =
         any { row -> row.all { it in markedValues } }
 }
-
-fun <V> List<String>.groupDividedBy(
-    separator: String,
-    transform: (List<String>) -> V
-): List<V> = sequence {
-    var curr = mutableListOf<String>()
-    forEach { string ->
-        when (separator) {
-            string -> {
-                if (curr.isNotEmpty()) yield(transform(curr))
-                curr = mutableListOf()
-            }
-            else -> curr.add(string)
-        }
-    }
-    if (curr.isNotEmpty()) yield(transform(curr))
-}.toList()
-
-fun <T> List<List<T>>.transpose(): List<List<T>> {
-    val n = map { it.size }.toSet().singleOrNull()
-        ?: throw IllegalArgumentException("Invalid data to transpose: $this")
-    return List(n) { y -> List(size) { x -> this[x][y] } }
-}
