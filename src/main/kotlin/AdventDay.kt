@@ -24,14 +24,10 @@ fun <U, V> List<U>.groupDividedBy(
     transform: (List<U>) -> V
 ): List<V> = sequence {
     var curr = mutableListOf<U>()
-    forEach { string ->
-        when (separator) {
-            string -> {
-                if (curr.isNotEmpty()) yield(transform(curr))
-                curr = mutableListOf()
-            }
-            else -> curr.add(string)
-        }
+    forEach {
+        if (it == separator && curr.isNotEmpty()) yield(transform(curr))
+        if (it == separator) curr = mutableListOf()
+        else curr+=it
     }
     if (curr.isNotEmpty()) yield(transform(curr))
 }.toList()
