@@ -19,7 +19,7 @@ inline fun <reified T> String.value(): T = when (T::class) {
 
 fun Any?.printIt() = this.also { println(it) }
 
-fun <U, V> List<U>.groupDividedBy(
+fun <U, V> List<U>.groupSeparatedBy(
     separator: U,
     transform: (List<U>) -> V
 ): List<V> = sequence {
