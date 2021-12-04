@@ -17,7 +17,7 @@ inline fun <reified T> String.value(): T = when (T::class) {
     else -> TODO("Add support to read ${T::class.java.simpleName}")
 }
 
-fun Any?.printIt() = println(this)
+fun Any?.printIt() = this.also { println(it) }
 
 fun <U, V> List<U>.groupDividedBy(
     separator: U,
