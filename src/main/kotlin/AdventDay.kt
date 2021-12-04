@@ -19,12 +19,11 @@ inline fun <reified T> String.value(): T = when (T::class) {
 
 fun Any?.printIt() = println(this)
 
-
-fun <V> List<String>.groupDividedBy(
-    separator: String,
-    transform: (List<String>) -> V
+fun <U, V> List<U>.groupDividedBy(
+    separator: U,
+    transform: (List<U>) -> V
 ): List<V> = sequence {
-    var curr = mutableListOf<String>()
+    var curr = mutableListOf<U>()
     forEach { string ->
         when (separator) {
             string -> {
