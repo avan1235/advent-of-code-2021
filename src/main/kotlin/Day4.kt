@@ -43,9 +43,9 @@ private class Board<V>(private val values: List<List<V>>) {
     private val allValues = values.flatten()
 
     fun mark(value: V) = markedValues.add(value)
-    fun wins() = values.wins() || transposedValues.wins()
+    fun wins() = values.rowWins() || transposedValues.rowWins()
     fun unmarkedValues() = allValues - markedValues
 
-    private fun List<List<V>>.wins() =
+    private fun List<List<V>>.rowWins() =
         any { row -> row.all { it in markedValues } }
 }
