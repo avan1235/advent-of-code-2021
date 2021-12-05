@@ -32,9 +32,12 @@ private class Diagram {
 
     fun markLine(line: L) = with(line) {
         when {
-            isVertical -> (from.x directedTo to.x).map { P(it, to.y) }.forEach { _m[it] = _m[it] + 1 }
-            isHorizontal -> (from.y directedTo to.y).map { P(to.x, it) }.forEach { _m[it] = _m[it] + 1 }
-            isDiagonal -> (from.x directedTo to.x).zip(from.y directedTo to.y).map { (x, y) -> P(x, y) }
+            isVertical -> (from.x directedTo to.x).map { P(it, to.y) }
+                .forEach { _m[it] = _m[it] + 1 }
+            isHorizontal -> (from.y directedTo to.y).map { P(to.x, it) }
+                .forEach { _m[it] = _m[it] + 1 }
+            isDiagonal -> (from.x directedTo to.x).zip(from.y directedTo to.y)
+                .map { (x, y) -> P(x, y) }
                 .forEach { _m[it] = _m[it] + 1 }
             else -> Unit
         }
