@@ -38,7 +38,7 @@ fun <T> List<List<T>>.transpose(): List<List<T>> {
     return List(n) { y -> List(size) { x -> this[x][y] } }
 }
 
-infix fun Int.range(o: Int) = if (this <= o) this..o else this downTo o
+infix fun Int.directedTo(o: Int) = if (this <= o) this..o else this downTo o
 
 class DefaultMap<K, V>(
     private val default: V,

@@ -1,6 +1,4 @@
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 object Day5 : AdventDay() {
     override fun solve() {
@@ -34,9 +32,10 @@ private class Diagram {
 
     fun markLine(line: Line) = with(line) {
         when {
-            isVertical -> (from.x range to.x).map { P(it, to.y) }.forEach { _m[it] = _m[it] + 1 }
-            isHorizontal -> (from.y range to.y).map { P(to.x, it) }.forEach { _m[it] = _m[it] + 1 }
-            isDiagonal -> (from.x range to.x).zip(from.y range to.y).map { (x, y) -> P(x, y) }.forEach { _m[it] = _m[it] + 1 }
+            isVertical -> (from.x directedTo to.x).map { P(it, to.y) }.forEach { _m[it] = _m[it] + 1 }
+            isHorizontal -> (from.y directedTo to.y).map { P(to.x, it) }.forEach { _m[it] = _m[it] + 1 }
+            isDiagonal -> (from.x directedTo to.x).zip(from.y directedTo to.y).map { (x, y) -> P(x, y) }
+                .forEach { _m[it] = _m[it] + 1 }
             else -> Unit
         }
     }
