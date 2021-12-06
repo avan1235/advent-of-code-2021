@@ -1,9 +1,9 @@
 object Day6 : AdventDay() {
     override fun solve() {
-        val initShoal = reads<String>()?.singleOrNull()?.toFishShoal() ?: return
+        val shoal = reads<String>()?.singleOrNull()?.toFishShoal() ?: return
 
-        (1..80).fold(initShoal) { shoal, _ -> shoal.afterDay() }.size.printIt()
-        (1..256).fold(initShoal) { shoal, _ -> shoal.afterDay() }.size.printIt()
+        shoal.afterDays(80).size.printIt()
+        shoal.afterDays(256).size.printIt()
     }
 }
 
@@ -21,7 +21,10 @@ private data class LanternFish(private val timer: Int) {
 private class FishShoal(val counts: Map<LanternFish, Long>) {
     val size = counts.values.sum()
 
-    fun afterDay(): FishShoal = DefaultMap<LanternFish, Long>(0).also {
+    fun afterDays(days: Int = 1) =
+        (1..days).fold(this) { shoal, _ -> shoal.afterDay() }
+
+    private fun afterDay(): FishShoal = DefaultMap<LanternFish, Long>(0).also {
         counts.forEach { (fish, count) ->
             fish.afterDay().forEach { newFish -> it[newFish] = it[newFish] + count }
         }
