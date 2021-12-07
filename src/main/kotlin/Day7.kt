@@ -19,4 +19,4 @@ object Day7 : AdventDay() {
 
 private fun List<Int>.distance(from: Int, by: (Int, Int) -> Int) = sumOf { by(from, it) }
 
-fun Iterable<Int>.median() = sorted().run { (this[(size - 1) / 2] + this[size / 2]) / 2 }
+private fun Iterable<Int>.median() = sorted().run { (this[(size - 1) / 2] + this[size / 2]) / 2 }
