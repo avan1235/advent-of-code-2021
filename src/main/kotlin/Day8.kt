@@ -7,10 +7,8 @@ object Day8 : AdventDay() {
         }.printIt()
 
         positions.sumOf { entry ->
-            val encoding = entry.decode()
-            entry.outputs.fold(0L) { acc, dig ->
-                10L * acc + encoding[dig]!!
-            }
+            val enc = entry.decode()
+            entry.outputs.fold(0L) { acc, dig -> 10 * acc + enc[dig]!! }
         }.printIt()
     }
 }
