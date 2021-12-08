@@ -2,14 +2,8 @@ object Day8 : AdventDay() {
     override fun solve() {
         val positions = reads<String>()?.map { it.toDigitsEntry() } ?: return
 
-        positions.sumOf { position ->
-            position.outputs.count { it.segments.size in setOf(2, 3, 4, 7) }
-        }.printIt()
-
-        positions.sumOf { entry ->
-            val enc = entry.decode()
-            entry.outputs.fold(0L) { acc, dig -> 10 * acc + enc[dig]!! }
-        }.printIt()
+        positions.sumOf { it.outputs.count(Digit::isEasy) }.printIt()
+        positions.sumOf { it.decode() }.printIt()
     }
 }
 
@@ -17,12 +11,17 @@ private fun String.toDigitsEntry() = split(" | ").map { part ->
     part.split(" ").map { Digit(it.toSet()) }
 }.let { (input, output) -> DigitsEntry(input, output) }
 
-private data class Digit(val segments: Set<Char>)
-
-private operator fun Digit.minus(o: Digit) = Digit(segments - o.segments)
+private data class Digit(val segments: Set<Char>) {
+    val isEasy = segments.size in setOf(2, 3, 4, 7)
+    operator fun minus(o: Digit) = Digit(segments - o.segments)
+}
 
 private data class DigitsEntry(val inputs: List<Digit>, val outputs: List<Digit>) {
-    fun decode(): Map<Digit, Int> {
+    fun decode(): Int = deduce().let { enc ->
+        outputs.fold(0) { acc, dig -> 10 * acc + enc[dig]!! }
+    }
+
+    private fun deduce(): Map<Digit, Int> {
         val seg = inputs.toSet().groupBy { it.segments.size }
         val one = seg[2]!!.single()
         val four = seg[4]!!.single()
