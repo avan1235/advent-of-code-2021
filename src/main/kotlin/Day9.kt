@@ -8,7 +8,7 @@ object Day9 : AdventDay() {
             .printIt()
 
         map.indices.asSequence()
-            .map { p -> map.dfs(p) { from, to -> from < to && to != 9 } }
+            .map { p -> map.dfs(start = p) { from, to -> map[from] < map[to] && map[to] != 9 } }
             .distinct().map { it.size }
             .sortedDescending().take(3)
             .fold(1, Int::times)
@@ -33,13 +33,13 @@ private data class Map<V>(val heights: List<List<V>>) {
         ).filter { it.isValid() }
     }
 
-    fun dfs(start: Pos, visit: (V, V) -> Boolean): Set<Pos> {
+    fun dfs(start: Pos, visit: (Pos, Pos) -> Boolean): Set<Pos> {
         val visited = mutableSetOf<Pos>()
         val queue = ArrayDeque<Pos>()
         tailrec fun go(from: Pos) {
             visited += from
             neighbours(from).filterNot { it in visited }
-                .filter { visit(this[from], this[it]) }
+                .filter { visit(from, it) }
                 .forEach { queue += it }
             go(queue.removeLastOrNull() ?: return)
         }
