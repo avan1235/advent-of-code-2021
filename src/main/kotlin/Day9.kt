@@ -43,15 +43,15 @@ private data class Map<V>(val heights: List<List<V>>) {
     ): Set<Loc> {
         val visited = mutableSetOf<Loc>()
         val queue = ArrayDeque<Loc>()
-        tailrec fun search(curr: Loc) {
+        tailrec fun go(curr: Loc) {
             visited += curr.also(action)
             neighbours(curr).filter { edge(curr, it) && it !in visited }.forEach { queue += it }
             when (type) {
-                SearchType.DFS -> search(queue.removeLastOrNull() ?: return)
-                SearchType.BFS -> search(queue.removeFirstOrNull() ?: return)
+                SearchType.DFS -> go(queue.removeLastOrNull() ?: return)
+                SearchType.BFS -> go(queue.removeFirstOrNull() ?: return)
             }
         }
-        return visited.also { search(from) }
+        return visited.also { go(from) }
     }
 
     private fun Loc.isValid() = y in heights.indices && x in heights[y].indices
