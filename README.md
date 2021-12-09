@@ -39,4 +39,4 @@ language constructions.
 | [Day 6: Lanternfish](https://adventofcode.com/2021/day/6) | [Day6.kt](./src/main/kotlin/Day6.kt)  | [Day 6 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-6/) | `crossinline`, data structures   |
 | [Day 7: The Treachery of Whales](https://adventofcode.com/2021/day/7) | [Day7.kt](./src/main/kotlin/Day7.kt)  | [Day 7 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-7/) | median, average, math, named args    |
 | [Day 8: Seven Segment Search](https://adventofcode.com/2021/day/8) | [Day8.kt](./src/main/kotlin/Day8.kt)  | [Day 8 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-8/) | `operator fun`, deduction     |
-| [Day 9: Smoke Basin](https://adventofcode.com/2021/day/9) | [Day9.kt](./src/main/kotlin/Day9.kt)  | [Day 9 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-9/) | `operator fun`, `tailrec fun`, dfs, bfs,      |
+| [Day 9: Smoke Basin](https://adventofcode.com/2021/day/9) | [Day9.kt](./src/main/kotlin/Day9.kt)  | [Day 9 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-9/) | `operator fun`, `tailrec fun`, dfs, bfs  |
