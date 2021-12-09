@@ -18,32 +18,32 @@ object Day9 : AdventDay() {
 
 private fun List<String>.toMap() = Map(map { line -> line.map { it.digitToInt() } })
 
-private data class Pos(val x: Int, val y: Int)
+private data class Loc(val x: Int, val y: Int)
 
 private data class Map<V>(val heights: List<List<V>>) {
 
-    val indices = heights.flatMapIndexed { y, row -> row.indices.map { Pos(it, y) } }
+    val indices = heights.flatMapIndexed { y, row -> row.indices.map { Loc(it, y) } }
 
-    operator fun get(p: Pos): V = with(p) { heights[y][x] }
+    operator fun get(p: Loc): V = with(p) { heights[y][x] }
 
-    fun neighbours(of: Pos) = with(of) {
+    fun neighbours(of: Loc) = with(of) {
         sequenceOf(
-            Pos(x + 1, y), Pos(x - 1, y),
-            Pos(x, y + 1), Pos(x, y - 1)
+            Loc(x + 1, y), Loc(x - 1, y),
+            Loc(x, y + 1), Loc(x, y - 1)
         ).filter { it.isValid() }
     }
 
     enum class SearchType { DFS, BFS }
 
     fun search(
-        from: Pos,
+        from: Loc,
         type: SearchType = SearchType.DFS,
-        action: (Pos) -> Unit = {},
-        visit: (Pos, Pos) -> Boolean = { _, _ -> true }
-    ): Set<Pos> {
-        val visited = mutableSetOf<Pos>()
-        val queue = ArrayDeque<Pos>()
-        tailrec fun go(curr: Pos) {
+        action: (Loc) -> Unit = {},
+        visit: (Loc, Loc) -> Boolean = { _, _ -> true }
+    ): Set<Loc> {
+        val visited = mutableSetOf<Loc>()
+        val queue = ArrayDeque<Loc>()
+        tailrec fun go(curr: Loc) {
             visited += curr.also(action)
             neighbours(curr).filter { visit(curr, it) && it !in visited }.forEach { queue += it }
             when (type) {
@@ -54,5 +54,5 @@ private data class Map<V>(val heights: List<List<V>>) {
         return visited.also { go(from) }
     }
 
-    private fun Pos.isValid() = y in heights.indices && x in heights[y].indices
+    private fun Loc.isValid() = y in heights.indices && x in heights[y].indices
 }
