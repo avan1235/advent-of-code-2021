@@ -8,7 +8,7 @@ object Day9 : AdventDay() {
             .printIt()
 
         map.indices.asSequence()
-            .map { p -> map.dfs(start = p) { from, to -> map[from] < map[to] && map[to] != 9 } }
+            .map { p -> map.search(from = p) { from, to -> map[from] < map[to] && map[to] != 9 } }
             .distinct().map { it.size }
             .sortedDescending().take(3)
             .fold(1, Int::times)
@@ -33,17 +33,25 @@ private data class Map<V>(val heights: List<List<V>>) {
         ).filter { it.isValid() }
     }
 
-    fun dfs(start: Pos, visit: (Pos, Pos) -> Boolean): Set<Pos> {
+    enum class SearchType { DFS, BFS }
+
+    fun search(
+        from: Pos,
+        type: SearchType = SearchType.DFS,
+        action: (Pos) -> Unit = {},
+        visit: (Pos, Pos) -> Boolean = { _, _ -> true }
+    ): Set<Pos> {
         val visited = mutableSetOf<Pos>()
         val queue = ArrayDeque<Pos>()
-        tailrec fun go(from: Pos) {
-            visited += from
-            neighbours(from).filterNot { it in visited }
-                .filter { visit(from, it) }
-                .forEach { queue += it }
-            go(queue.removeLastOrNull() ?: return)
+        tailrec fun go(curr: Pos) {
+            visited += curr.also(action)
+            neighbours(curr).filter { visit(curr, it) && it !in visited }.forEach { queue += it }
+            when (type) {
+                SearchType.DFS -> go(queue.removeLastOrNull() ?: return)
+                SearchType.BFS -> go(queue.removeFirstOrNull() ?: return)
+            }
         }
-        return visited.also { go(start) }
+        return visited.also { go(from) }
     }
 
     private fun Pos.isValid() = y in heights.indices && x in heights[y].indices
