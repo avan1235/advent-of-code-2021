@@ -4,15 +4,15 @@ object Day10 : AdventDay() {
   override fun solve() {
     val lines = reads<String>() ?: return
 
-    lines.sumOf { it.syntaxErrorScore() }.printIt()
-    lines.mapNotNull { it.score() }.sorted().let { it[it.size / 2] }.printIt()
+    lines.sumOf { it.corruptedScore() }.printIt()
+    lines.mapNotNull { it.completionScore() }.sorted().let { it[it.size / 2] }.printIt()
   }
 }
 
 private val OPEN = setOf('[', '{', '(', '<')
 private val CLOSE = setOf(']', '}', ')', '>')
 
-private val Char.rev: Char
+private val Char.closed: Char
   get() = when (this) {
     '{' -> '}'
     '(' -> ')'
@@ -21,17 +21,16 @@ private val Char.rev: Char
     else -> unknownBracket(this)
   }
 
-private fun String.syntaxErrorScore(): Int {
-  val s = Stack<Char>()
-  val c = firstOrNull {
-    when (it) {
-      in OPEN -> s.push(it)
-      in CLOSE -> if (s.pop().rev != it) return@firstOrNull true
-      else -> unknownBracket(it)
+private fun String.corruptedScore(): Int {
+  val stack = Stack<Char>()
+  val firstCorrupted = firstOrNull { c ->
+    when (c) {
+      in OPEN -> stack.push(c).let { false }
+      in CLOSE -> stack.pop().closed != c
+      else -> unknownBracket(c)
     }
-    false
   }
-  return when (c) {
+  return when (firstCorrupted) {
     ')' -> 3
     ']' -> 57
     '}' -> 1197
@@ -40,21 +39,21 @@ private fun String.syntaxErrorScore(): Int {
   }
 }
 
-private fun String.score(): Long? {
-  val s = Stack<Char>()
+private fun String.completionScore(): Long? {
+  val stack = Stack<Char>()
   for (c in this) {
     when (c) {
-      in OPEN -> s.push(c)
-      in CLOSE -> if (s.pop().rev != c) return null
+      in OPEN -> stack.push(c)
+      in CLOSE -> if (stack.pop().closed != c) return null
       else -> unknownBracket(c)
     }
   }
-  return s.foldRight(0L) { c, sum ->
-    5 * sum + when (val b = c.rev) {
-      ')' -> 1L
-      ']' -> 2L
-      '}' -> 3L
-      '>' -> 4L
+  return stack.foldRight(0L) { c, sum ->
+    5 * sum + when (val b = c.closed) {
+      ')' -> 1
+      ']' -> 2
+      '}' -> 3
+      '>' -> 4
       else -> unknownBracket(b)
     }
   }
