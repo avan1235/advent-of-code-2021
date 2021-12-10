@@ -49,7 +49,7 @@ private fun String.completionScore(): Long? {
     }
   }
   return stack.foldRight(0L) { c, sum ->
-    5 * sum + when (val b = c.closed) {
+    5 * sum + when (c.closed) {
       ')' -> 1
       ']' -> 2
       '}' -> 3
