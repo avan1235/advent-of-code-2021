@@ -12,13 +12,13 @@ object Day10 : AdventDay() {
 private val OPEN = setOf('[', '{', '(', '<')
 private val CLOSE = setOf(']', '}', ')', '>')
 
-private val Char.closed: Char
+private val Char.closed: Char?
   get() = when (this) {
     '{' -> '}'
     '(' -> ')'
     '[' -> ']'
     '<' -> '>'
-    else -> unknownBracket(this)
+    else -> null
   }
 
 private fun String.corruptedScore(): Int {
@@ -54,7 +54,7 @@ private fun String.completionScore(): Long? {
       ']' -> 2
       '}' -> 3
       '>' -> 4
-      else -> unknownBracket(b)
+      else -> unknownBracket(c)
     }
   }
 }
