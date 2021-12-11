@@ -19,13 +19,11 @@ private data class Pos(val x: Int, val y: Int)
 private data class EnergyMap(val maxVal: Int, private val values: List<MutableList<Int>>) {
 
   val indices = values.flatMapIndexed { y, row -> row.indices.map { Pos(it, y) } }
-
   private val posOf = LazyDefaultMap(::mutableSetOf,
     indices.groupBy { this[it] }.mapValues { it.value.toMutableSet() }.toMutableMap()
   )
 
   fun copy() = EnergyMap(maxVal, values.map { it.toMutableList() })
-
   operator fun get(p: Pos): Int = with(p) { values[y][x] }
   operator fun set(p: Pos, v: Int) {
     val newVal = v.coerceAtMost(maxVal)
@@ -34,7 +32,9 @@ private data class EnergyMap(val maxVal: Int, private val values: List<MutableLi
     values[p.y][p.x] = newVal
   }
 
-  fun neighbours(of: Pos) = sequence { for (x in -1..1) for (y in -1..1) yield(Pair(x, y)) }
+  fun neighbours(of: Pos) = sequence {
+    for (x in -1..1) for (y in -1..1) yield(Pair(x, y))
+  }
     .filterNot { (x, y) -> x == 0 && y == 0 }
     .map { (x, y) -> Pos(of.x + x, of.y + y) }
     .filter { it.isValid() }
