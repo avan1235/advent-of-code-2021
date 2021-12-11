@@ -1,25 +1,30 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
-    application
+  kotlin("jvm") version "1.6.0"
+  application
 }
 
 group = "ml.kotlin.dev"
 version = "1.0"
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+  kotlinOptions.jvmTarget = "1.8"
 }
 
 application {
-    mainClass.set("AdventKt")
+  mainClass.set("AdventKt")
+}
+
+tasks.test {
+  useJUnitPlatform()
 }
 
 dependencies {
-    implementation(kotlin("reflect"))
+  implementation(kotlin("reflect"))
+  testImplementation(kotlin("test"))
 }

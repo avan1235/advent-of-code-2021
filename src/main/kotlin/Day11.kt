@@ -35,7 +35,7 @@ private data class EnergyMap(val maxVal: Int, private val values: List<MutableLi
   }
 
   fun neighbours(of: Pos) = sequence { for (x in -1..1) for (y in -1..1) yield(Pair(x, y)) }
-    .filter { (x, y) -> x != 0 || y != 0 }
+    .filterNot { (x, y) -> x == 0 && y == 0 }
     .map { (x, y) -> Pos(of.x + x, of.y + y) }
     .filter { it.isValid() }
 

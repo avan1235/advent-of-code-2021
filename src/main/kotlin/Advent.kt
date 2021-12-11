@@ -1,6 +1,4 @@
-fun main() = AdventDay::class.sealedSubclasses
-  .mapNotNull { it.objectInstance }
-  .sortedBy { it::class.java.simpleName.removePrefix("Day").toInt() }
+fun main() = AdventDay.all
   .forEach {
     println("--- ${it::class.java.simpleName}")
     it.solve()

@@ -1,3 +1,6 @@
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
+
 inline fun <reified T> String.value(): T = when (T::class) {
   String::class -> this as T
   Long::class -> toLongOrNull() as T
@@ -34,7 +37,7 @@ class DefaultMap<K, V>(
   private val default: V,
   private val map: MutableMap<K, V> = HashMap()
 ) : MutableMap<K, V> by map {
-  override fun get(key: K): V = map.getOrDefault(key, default)
+  override fun get(key: K): V = map.getOrDefault(key, default).also { map[key] = it }
 }
 
 class LazyDefaultMap<K, V>(
@@ -43,3 +46,10 @@ class LazyDefaultMap<K, V>(
 ) : MutableMap<K, V> by map {
   override fun get(key: K): V = map.getOrDefault(key, default()).also { map[key] = it }
 }
+
+fun catchSystemOut(action: () -> Unit) = ByteArrayOutputStream().also {
+  val originalOut = System.out
+  System.setOut(PrintStream(it))
+  action()
+  System.setOut(originalOut)
+}.toString()
