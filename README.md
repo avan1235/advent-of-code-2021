@@ -23,6 +23,17 @@ It's enough to create some Kotlin `object` that inherits from `AdventDay` to get
 interested in the details, let's look into the definition of the [Advent.kt](./src/main/kotlin/Advent.kt)
 to see how to find all `object` classes in Kotlin and run some method on them 😎.
 
+To run all solutions, simply call `./gradlew run`
+
+### Tests
+
+The solutions are tested with the values gathered from [adventofcode.com](https://adventofcode.com/2021). Every day of
+Advent has its expected output defined in [AdventTest.kt](./src/test/kotlin/AdventTest.kt) and in order to
+verify correct state of the outputs for days we run every day solution and catch it standard output stream
+to compare it with expected value.
+
+To run all tests, simply call `./gradlew test`
+
 ## Problems
 
 The problems solutions are included in project, but for every of them you can also find some corresponding article at my
