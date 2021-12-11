@@ -36,3 +36,10 @@ class DefaultMap<K, V>(
 ) : MutableMap<K, V> by map {
   override fun get(key: K): V = map.getOrDefault(key, default)
 }
+
+class LazyDefaultMap<K, V>(
+  private val default: () -> V,
+  private val map: MutableMap<K, V> = HashMap()
+) : MutableMap<K, V> by map {
+  override fun get(key: K): V = map.getOrDefault(key, default()).also { map[key] = it }
+}
