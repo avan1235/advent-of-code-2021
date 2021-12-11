@@ -40,13 +40,14 @@ private data class EnergyMap(val maxVal: Int, private val values: List<MutableLi
     .filter { it.isValid() }
 
   fun simulateStep(): Int {
-    indices.forEach { this[it] = this[it] + 1 }
     val flashed = mutableSetOf<Pos>()
-    while (true) {
-      val nowFlashed = (posOf[maxVal] - flashed).takeIf { it.isNotEmpty() } ?: break
-      flashed += nowFlashed
-      nowFlashed.flatMap { neighbours(it) }.forEach { this[it] = this[it] + 1 }
+    tailrec fun flash(flash: Set<Pos>) {
+      flashed += flash
+      flash.forEach { pos -> neighbours(pos).forEach { this[it] = this[it] + 1 } }
+      if (flash.isNotEmpty()) flash(posOf[maxVal] - flashed)
     }
+    indices.forEach { this[it] = this[it] + 1 }
+    flash(posOf[maxVal])
     indices.forEach { this[it] = this[it] % maxVal }
     return flashed.size
   }
