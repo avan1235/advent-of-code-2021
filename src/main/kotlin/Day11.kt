@@ -43,11 +43,11 @@ private data class EnergyMap(val maxVal: Int, private val values: List<MutableLi
     val flashed = mutableSetOf<Pos>()
     tailrec fun flash(flash: Set<Pos>) {
       flashed += flash
-      flash.forEach { pos -> neighbours(pos).forEach { this[it] = this[it] + 1 } }
+      flash.toList().forEach { pos -> neighbours(pos).forEach { this[it] = this[it] + 1 } }
       if (flash.isNotEmpty()) flash(posOf[maxVal] - flashed)
     }
     indices.forEach { this[it] = this[it] + 1 }
-    flash(posOf[maxVal].toSet())
+    flash(posOf[maxVal])
     indices.forEach { this[it] = this[it] % maxVal }
     return flashed.size
   }
