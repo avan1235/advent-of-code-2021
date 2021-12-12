@@ -17,11 +17,9 @@ private value class Cave(val name: String) {
   override fun toString(): String = name
 }
 
-private fun <K, V> Pair<K, V>.flip() = Pair(second, first)
-
 private class Graph(edges: List<Pair<Cave, Cave>>) {
 
-  private val adj = (edges + edges.map { it.flip() })
+  private val adj = (edges + edges.map { Pair(it.second, it.first) })
     .groupBy(keySelector = { it.first }, valueTransform = { it.second })
     .mapValues { it.value.toSet() }
 
