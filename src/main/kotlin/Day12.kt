@@ -14,7 +14,6 @@ private fun List<String>.toGraph() = map { line ->
 @JvmInline
 private value class Cave(val name: String) {
   fun isBig() = name.any { it.isUpperCase() }
-  override fun toString(): String = name
 }
 
 private class Graph(edges: List<Pair<Cave, Cave>>) {
