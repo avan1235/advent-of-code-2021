@@ -38,6 +38,7 @@ class DefaultMap<K, V>(
   private val map: MutableMap<K, V> = HashMap()
 ) : MutableMap<K, V> by map {
   override fun get(key: K): V = map.getOrDefault(key, default).also { map[key] = it }
+  operator fun plus(kv: Pair<K, V>) = DefaultMap(default, (map + kv).toMutableMap())
 }
 
 class LazyDefaultMap<K, V>(

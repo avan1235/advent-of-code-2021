@@ -47,7 +47,7 @@ private data class EnergyMap(val maxVal: Int, private val values: List<MutableLi
       if (flash.isNotEmpty()) flash(posOf[maxVal] - flashed)
     }
     indices.forEach { this[it] = this[it] + 1 }
-    flash(posOf[maxVal])
+    flash(posOf[maxVal].toSet())
     indices.forEach { this[it] = this[it] % maxVal }
     return flashed.size
   }

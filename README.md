@@ -53,3 +53,4 @@ language constructions.
 | [Day 9: Smoke Basin](https://adventofcode.com/2021/day/9) | [Day9.kt](./src/main/kotlin/Day9.kt)  | [Day 9 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-9/) | `operator fun`, `tailrec fun`, dfs, bfs  |
 | [Day 10: Syntax Scoring](https://adventofcode.com/2021/day/10) | [Day10.kt](./src/main/kotlin/Day10.kt)  | [Day 10 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-10/) | `foldRight`, `Stack<V>`, bracket pairing  |
 | [Day 11: Dumbo Octopus](https://adventofcode.com/2021/day/11) | [Day11.kt](./src/main/kotlin/Day11.kt)  | [Day 11 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-11/) | `Sequence<T>`, `operator fun set`, `operator fun get`, `LazyDefaultMap<K, V>`  |
+| [Day 12: Passage Pathing](https://adventofcode.com/2021/day/12) | [Day12.kt](./src/main/kotlin/Day12.kt)  | [Day 12 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-12/) | `@JvmInline`, `value class`, dfs, paths in graph  |
