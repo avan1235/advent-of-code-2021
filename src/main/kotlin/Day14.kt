@@ -23,7 +23,8 @@ private fun List<String>.toInsertionRules() = buildMap {
 
 private data class Polymer(val counts: Map<String, Long>, val first: Char, val last: Char) {
 
-  fun apply(rules: InsertionRules, times: Int) = (1..times).fold(this) { p, _ -> rules.apply(p) }
+  fun apply(rules: InsertionRules, times: Int) = (1..times).fold(this) { p, _ -> rules(p) }
+
   fun stats() = counts().run { maxOf { it.value } - minOf { it.value } }
 
   fun counts() = DefaultMap<Char, Long>(0).apply {
@@ -35,7 +36,7 @@ private data class Polymer(val counts: Map<String, Long>, val first: Char, val l
 
 private data class InsertionRules(val change: Map<String, List<String>>) {
 
-  fun apply(polymer: Polymer): Polymer = DefaultMap<String, Long>(0).apply {
+  operator fun invoke(polymer: Polymer): Polymer = DefaultMap<String, Long>(0).apply {
     polymer.counts.forEach { (pattern, count) ->
       (change[pattern] ?: listOf(pattern)).forEach { this[it] = this[it] + count }
     }
