@@ -39,6 +39,7 @@ class DefaultMap<K, V>(
 ) : MutableMap<K, V> by map {
   override fun get(key: K): V = map.getOrDefault(key, default).also { map[key] = it }
   operator fun plus(kv: Pair<K, V>): DefaultMap<K, V> = (map + kv).toDefaultMap(default)
+  override fun toString() = map.toString()
 }
 
 fun <K, V> Map<K, V>.toDefaultMap(default: V) = DefaultMap(default, toMutableMap())
