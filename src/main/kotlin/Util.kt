@@ -50,6 +50,7 @@ class LazyDefaultMap<K, V>(
 ) : MutableMap<K, V> by map {
   override fun get(key: K): V = map.getOrDefault(key, default()).also { map[key] = it }
   operator fun plus(kv: Pair<K, V>): LazyDefaultMap<K, V> = (map + kv).toLazyDefaultMap(default)
+  override fun toString() = map.toString()
 }
 
 fun <K, V> Map<K, V>.toLazyDefaultMap(default: () -> V) = LazyDefaultMap(default, toMutableMap())
