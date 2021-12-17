@@ -26,6 +26,5 @@ tasks.test {
 
 dependencies {
   implementation(kotlin("reflect"))
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-RC3")
   testImplementation(kotlin("test"))
 }

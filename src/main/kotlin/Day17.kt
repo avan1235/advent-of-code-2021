@@ -1,4 +1,3 @@
-import kotlinx.coroutines.*
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
@@ -23,12 +22,9 @@ private fun String.toTargetArea() = removePrefix("target area: x=").split(", y="
 
 private data class TargetArea(val x: IntProgression, val y: IntProgression) {
   fun runSimulations(x: IntRange, y: IntRange): List<State> {
-    val jobs = buildList {
-      for (vx in x) for (vy in y) CoroutineScope(Dispatchers.IO)
-        .async { simulate(vx, vy) }
-        .let { add(it) }
+    return buildList {
+      for (vx in x) for (vy in y) simulate(vx, vy)?.let { add(it) }
     }
-    return runBlocking { jobs.awaitAll() }.filterNotNull()
   }
 
   fun simulate(vx: Int, vy: Int): State? {
