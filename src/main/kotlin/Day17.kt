@@ -6,8 +6,8 @@ object Day17 : AdventDay() {
     val data = reads<String>()?.singleOrNull() ?: return
     val targetArea = data.toTargetArea()
 
-    val maxX = maxOf(targetArea.x.maxOf { it.absoluteValue })
-    val maxY = maxOf(targetArea.y.maxOf { it.absoluteValue })
+    val maxX = targetArea.x.maxOf { it.absoluteValue }
+    val maxY = targetArea.y.maxOf { it.absoluteValue }
 
     targetArea.runSimulations(x = -maxX..maxX, y = -maxY..maxY).run {
       maxOf { state -> state.yHistory.maxOf { it } }.printIt()
