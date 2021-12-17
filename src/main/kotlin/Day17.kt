@@ -1,11 +1,15 @@
 import kotlinx.coroutines.*
+import kotlin.math.absoluteValue
 
 object Day17 : AdventDay() {
   override fun solve() {
     val data = reads<String>()?.singleOrNull() ?: return
     val targetArea = data.toTargetArea()
 
-    val states = targetArea.runSimulations(x = -256..256, y = -128..128)
+    val maxX = maxOf(targetArea.x.maxOf { it.absoluteValue })
+    val maxY = maxOf(targetArea.y.maxOf { it.absoluteValue })
+
+    val states = targetArea.runSimulations(x = -maxX..maxX, y = -maxY..maxY)
     states.maxOf { state -> state.yHistory.maxOf { it } }.printIt()
     states.size.printIt()
   }
