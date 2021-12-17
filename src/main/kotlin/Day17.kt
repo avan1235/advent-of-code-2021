@@ -1,5 +1,6 @@
 import kotlinx.coroutines.*
 import kotlin.math.absoluteValue
+import kotlin.math.sign
 
 object Day17 : AdventDay() {
   override fun solve() {
@@ -9,9 +10,10 @@ object Day17 : AdventDay() {
     val maxX = maxOf(targetArea.x.maxOf { it.absoluteValue })
     val maxY = maxOf(targetArea.y.maxOf { it.absoluteValue })
 
-    val states = targetArea.runSimulations(x = -maxX..maxX, y = -maxY..maxY)
-    states.maxOf { state -> state.yHistory.maxOf { it } }.printIt()
-    states.size.printIt()
+    targetArea.runSimulations(x = -maxX..maxX, y = -maxY..maxY).run {
+      maxOf { state -> state.yHistory.maxOf { it } }.printIt()
+      size.printIt()
+    }
   }
 }
 
@@ -20,8 +22,6 @@ private fun String.toTargetArea() = removePrefix("target area: x=").split(", y="
   .let { (x, y) -> TargetArea(x, y) }
 
 private data class TargetArea(val x: IntProgression, val y: IntProgression) {
-  operator fun contains(state: State) = state.x in x && state.y in y
-
   fun runSimulations(x: IntRange, y: IntRange): List<State> {
     val jobs = buildList {
       for (vx in x) for (vy in y) CoroutineScope(Dispatchers.IO)
@@ -35,7 +35,7 @@ private data class TargetArea(val x: IntProgression, val y: IntProgression) {
     var state = State(vx, vy)
     while (state.canReach(this)) {
       state = state.step()
-      if (state in this) return state
+      if (state.x in x && state.y in y) return state
     }
     return null
   }
@@ -44,14 +44,13 @@ private data class TargetArea(val x: IntProgression, val y: IntProgression) {
 private data class State(
   val vx: Int, val vy: Int,
   val x: Int = 0, val y: Int = 0,
-  val xHistory: List<Int> = listOf(), val yHistory: List<Int> = listOf(),
+  val yHistory: List<Int> = listOf(),
 ) {
   fun step() = State(
     x = x + vx,
     y = y + vy,
-    vx = if (vx > 0) vx - 1 else if (vx < 0) vx + 1 else 0,
+    vx = vx - vx.sign,
     vy = vy - 1,
-    xHistory = xHistory + x,
     yHistory = yHistory + y,
   )
 
