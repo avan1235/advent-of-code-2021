@@ -6,21 +6,20 @@ object Day18 : AdventDay() {
     snailFish.reduce { l, r -> l + r }.magnitude().printIt()
     sequence {
       for (l in snailFish) for (r in snailFish)
-        if (l != r) yield((l + r).magnitude())
-    }.maxOf { it }.printIt()
+        if (l != r) yield(l + r)
+    }.maxOf { it.magnitude() }.printIt()
   }
 }
 
-private sealed interface TreeNode {
-  var parent: TreeParent?
-  fun copy(with: TreeParent? = null): TreeNode
+private sealed class TreeNode(var parent: TreeParent?) {
+  abstract fun copy(with: TreeParent? = null): TreeNode
 }
 
-private class TreeLeaf(var value: Int, override var parent: TreeParent?) : TreeNode {
+private class TreeLeaf(var value: Int, parent: TreeParent?) : TreeNode(parent) {
   override fun copy(with: TreeParent?) = TreeLeaf(value, with)
 }
 
-private class TreeParent(override var parent: TreeParent?) : TreeNode {
+private class TreeParent(parent: TreeParent?) : TreeNode(parent) {
   lateinit var left: TreeNode
   lateinit var right: TreeNode
   override fun copy(with: TreeParent?) = TreeParent(with).also {
@@ -52,7 +51,10 @@ private operator fun TreeNode.plus(other: TreeNode) = TreeParent(parent = null).
   parent.right = other.copy(parent)
 }.apply { reduce() }
 
-private tailrec fun TreeNode.updateOnMost(select: TreeParent.() -> TreeNode, update: (Int) -> Int): Unit = when (this) {
+private tailrec fun TreeNode.updateOnMost(
+  select: TreeParent.() -> TreeNode,
+  update: (Int) -> Int
+): Unit = when (this) {
   is TreeLeaf -> value = update(value)
   is TreeParent -> select().updateOnMost(select, update)
 }
@@ -101,10 +103,10 @@ private fun TreeNode.reduce() {
   while (true) {
     val explode = findToExplode(level = 4)
     if (explode == null) findToSplit()?.split() ?: break
-    else {
-      explode.goUpFrom { right }?.left?.updateOnMost({ right }) { it + explode.leftValue }
-      explode.goUpFrom { left }?.right?.updateOnMost({ left }) { it + explode.rightValue }
-      explode.changeTo { parent -> TreeLeaf(0, parent) }
+    else explode.run {
+      goUpFrom { right }?.left?.updateOnMost({ right }) { it + explode.leftValue }
+      goUpFrom { left }?.right?.updateOnMost({ left }) { it + explode.rightValue }
+      changeTo { parent -> TreeLeaf(0, parent) }
     }
   }
 }
