@@ -105,8 +105,8 @@ private fun TreeNode.reduce() {
     val explode = findToExplode(level = 4)
     if (explode == null) findToSplit()?.split() ?: break
     else explode.run {
-      goUpFrom { left }?.left?.updateOnMost({ right }) { it + explode.leftValue }
-      goUpFrom { right }?.right?.updateOnMost({ left }) { it + explode.rightValue }
+      goUpFrom { left }?.left?.updateOnMost({ right }) { it + leftValue }
+      goUpFrom { right }?.right?.updateOnMost({ left }) { it + rightValue }
       changeTo { parent -> TreeLeaf(0, parent) }
     }
   }
