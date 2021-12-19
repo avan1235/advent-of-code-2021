@@ -19,7 +19,7 @@ private class TreeLeaf(var value: Int, parent: TreeParent?) : TreeNode(parent) {
   override fun copy(with: TreeParent?) = TreeLeaf(value, with)
 }
 
-private class TreeParent(parent: TreeParent?) : TreeNode(parent) {
+private class TreeParent(parent: TreeParent? = null) : TreeNode(parent) {
   lateinit var left: TreeNode
   lateinit var right: TreeNode
   override fun copy(with: TreeParent?) = TreeParent(with).also {
@@ -46,7 +46,7 @@ private fun TreeNode.magnitude(): Long = when (this) {
   is TreeParent -> 3 * left.magnitude() + 2 * right.magnitude()
 }
 
-private operator fun TreeNode.plus(other: TreeNode) = TreeParent(parent = null).also { parent ->
+private operator fun TreeNode.plus(other: TreeNode) = TreeParent().also { parent ->
   parent.left = this.copy(parent)
   parent.right = other.copy(parent)
 }.apply { reduce() }
@@ -62,7 +62,7 @@ private tailrec fun TreeNode.updateOnMost(
 private tailrec fun TreeParent.goUpFrom(select: TreeParent.() -> TreeNode): TreeParent? {
   val currParent = parent
   return if (currParent == null) currParent
-  else if (currParent.select() != this) currParent.goUpFrom(select)
+  else if (currParent.select() == this) currParent.goUpFrom(select)
   else currParent
 }
 
@@ -91,7 +91,8 @@ private val TreeParent.rightValue: Int get() = (right as? TreeLeaf)?.value ?: 0
 private fun TreeNode.reduce() {
   fun TreeNode.findToExplode(level: Int): TreeParent? = when {
     level == 0 -> leftFinalParent()
-    level > 0 && this is TreeParent -> left.findToExplode(level - 1) ?: right.findToExplode(level - 1)
+    level > 0 && this is TreeParent ->
+      left.findToExplode(level - 1) ?: right.findToExplode(level - 1)
     else -> null
   }
 
@@ -104,8 +105,8 @@ private fun TreeNode.reduce() {
     val explode = findToExplode(level = 4)
     if (explode == null) findToSplit()?.split() ?: break
     else explode.run {
-      goUpFrom { right }?.left?.updateOnMost({ right }) { it + explode.leftValue }
-      goUpFrom { left }?.right?.updateOnMost({ left }) { it + explode.rightValue }
+      goUpFrom { left }?.left?.updateOnMost({ right }) { it + explode.leftValue }
+      goUpFrom { right }?.right?.updateOnMost({ left }) { it + explode.rightValue }
       changeTo { parent -> TreeLeaf(0, parent) }
     }
   }
