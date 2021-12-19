@@ -37,8 +37,8 @@ private class ScannersMatcher(val scanners: List<Scanner>, val minCommon: Int) {
       search@ for (fromId in paired) for (toId in toPair) {
         val pairedShift = tryPair(FT(fromId, toId)) ?: continue
         transform[toId] = transform[fromId] + pairedShift
-        beacons += scanners[toId].beacons.map { it transformBy transform[toId] }
-        scan[toId] = V3.ZERO transformBy transform[toId]
+        beacons += scanners[toId].beacons.map { transform[toId](it) }
+        scan[toId] = transform[toId](V3.ZERO)
         toId.also { paired += it }.also { toPair -= it }
         break@search
       }
@@ -95,7 +95,6 @@ private data class V3(val x: Int, val y: Int, val z: Int) {
   }
 
   infix fun transformBy(by: T) = axeChanged(by.id / 4).axeRotated(by.id % 4) + by.shift
-  infix fun transformBy(by: List<T>) = by.foldRight(this) { t, v3 -> v3 transformBy t }
 
   operator fun plus(v3: V3) = V3(x + v3.x, y + v3.y, z + v3.z)
   operator fun minus(v3: V3) = V3(x - v3.x, y - v3.y, z - v3.z)
@@ -106,6 +105,8 @@ private data class V3(val x: Int, val y: Int, val z: Int) {
     val TRANSFORMS = (0..23).map { T(it, ZERO) }
   }
 }
+
+private operator fun List<V3.T>.invoke(v: V3) = foldRight(v) { t, v3 -> v3 transformBy t }
 
 private class Scanner(val id: Int, val beacons: Set<V3>) {
   infix fun transformBy(t: V3.T) = Scanner(id, beacons.map { it transformBy t }.toHashSet())
