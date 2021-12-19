@@ -12,34 +12,34 @@ object Day19 : AdventDay() {
 
     beaconsFromStart.size.printIt()
     sequence {
-      for ((k1, v1) in positioned) for ((k2, v2) in positioned)
-        if (k1 != k2) yield(v1 - v2)
+      for ((s1, v1) in positioned) for ((s2, v2) in positioned)
+        if (s1 != s2) yield(v1 - v2)
     }.maxOf { it.manhattanValue }.printIt()
   }
 }
 
 private class ScannersMatcher(val scanners: List<Scanner>, val minCommon: Int) {
 
-  private data class FT(val fromId: Int, val toId: Int)
+  private data class FT(val from: Scanner, val to: Scanner)
 
   private val cachedPair = mutableMapOf<FT, V3.T>()
   private val triedToPair = DefaultMap<FT, Boolean>(false)
 
-  fun findPairing(from: Scanner): Pair<Set<V3>, Map<Int, V3>> {
-    val transform = DefaultMap<Int, List<V3.T>>(emptyList())
-    val beacons = from.beacons.toMutableSet()
-    val scan = mutableMapOf<Int, V3>().also { it[from.id] = V3.ZERO }
+  fun findPairing(start: Scanner): Pair<Set<V3>, Map<Scanner, V3>> {
+    val transform = DefaultMap<Scanner, List<V3.T>>(emptyList())
+    val beacons = start.beacons.toMutableSet()
+    val scan = mutableMapOf<Scanner, V3>().also { it[start] = V3.ZERO }
 
-    val paired = mutableSetOf(from.id)
-    val toPair = (scanners.map { it.id } - paired).toMutableSet()
+    val paired = mutableSetOf(start)
+    val toPair = (scanners - paired).toMutableSet()
 
     while (toPair.isNotEmpty()) {
-      search@ for (fromId in paired) for (toId in toPair) {
-        val pairedShift = tryPair(FT(fromId, toId)) ?: continue
-        transform[toId] = transform[fromId] + pairedShift
-        beacons += scanners[toId].beacons.map { transform[toId](it) }
-        scan[toId] = transform[toId](V3.ZERO)
-        toId.also { paired += it }.also { toPair -= it }
+      search@ for (from in paired) for (to in toPair) {
+        val pairedShift = tryPair(FT(from, to)) ?: continue
+        transform[to] = transform[from] + pairedShift
+        beacons += to.beacons.map { transform[to](it) }
+        scan[to] = transform[to](V3.ZERO)
+        to.also { paired += it }.also { toPair -= it }
         break@search
       }
     }
@@ -49,14 +49,13 @@ private class ScannersMatcher(val scanners: List<Scanner>, val minCommon: Int) {
   private fun tryPair(ft: FT): V3.T? {
     if (triedToPair[ft]) return cachedPair[ft]
     triedToPair[ft] = true
-    val from = scanners[ft.fromId]
     for (t in TRANSFORMS) {
-      val to = t(scanners[ft.toId])
+      val to = t(ft.to)
       val diffs = buildSet {
-        for (fb in from.beacons) for (tb in to.beacons) add(tb - fb)
+        for (fb in ft.from.beacons) for (tb in to.beacons) add(tb - fb)
       }
       for (diff in diffs) {
-        val cnt = to.beacons.count { tb -> (tb - diff) in from.beacons }
+        val cnt = to.beacons.count { tb -> (tb - diff) in ft.from.beacons }
         if (cnt >= minCommon) return t.copy(shift = -diff).also { cachedPair[ft] = it }
       }
     }
