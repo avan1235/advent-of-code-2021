@@ -8,11 +8,11 @@ object Day19 : AdventDay() {
 
     val matcher = ScannersMatcher(scanners, minCommon = 12)
     val start = scanners.first()
-    val (beaconsFromStart, scannersFromStart) = matcher.findPairing(start)
+    val (beaconsFromStart, positioned) = matcher.findPairing(start)
 
     beaconsFromStart.size.printIt()
     sequence {
-      for ((k1, v1) in scannersFromStart) for ((k2, v2) in scannersFromStart)
+      for ((k1, v1) in positioned) for ((k2, v2) in positioned)
         if (k1 != k2) yield(v1 - v2)
     }.maxOf { it.manhattanValue }.printIt()
   }
@@ -52,7 +52,9 @@ private class ScannersMatcher(val scanners: List<Scanner>, val minCommon: Int) {
     val from = scanners[ft.fromId]
     for (t in TRANSFORMS) {
       val to = scanners[ft.toId] transformBy t
-      val shs = buildSet { for (fb in from.beacons) for (tb in to.beacons) add(fb - tb) }
+      val shs = buildSet {
+        for (fb in from.beacons) for (tb in to.beacons) add(fb - tb)
+      }
       for (sh in shs) {
         val cnt = to.beacons.count { vb -> (vb + sh) in from.beacons }
         if (cnt >= minCommon) return t.copy(shift = sh).also { cachedPair[ft] = it }
@@ -67,14 +69,14 @@ private fun List<String>.toScanner() = Scanner(
   drop(1).map { it.toBeacon() }.toSet()
 )
 
-private fun String.toBeacon() = split(",").map { it.toInt() }.let { (x, y, z) -> V3(x, y, z) }
+private fun String.toBeacon() = split(",").map { it.toInt() }
+  .let { (x, y, z) -> V3(x, y, z) }
 
 private data class V3(val x: Int, val y: Int, val z: Int) {
-  val manhattanValue = x.absoluteValue + y.absoluteValue + z.absoluteValue
-
   data class T(val id: Int, val shift: V3)
 
-  fun axeRotated(id: Int) = when (id) {
+  val manhattanValue = x.absoluteValue + y.absoluteValue + z.absoluteValue
+  private fun axeRotated(id: Int) = when (id) {
     0 -> V3(x, y, z)
     1 -> V3(-y, x, z)
     2 -> V3(-x, -y, z)
@@ -82,7 +84,7 @@ private data class V3(val x: Int, val y: Int, val z: Int) {
     else -> error("Invalid axeRotate id")
   }
 
-  fun axeChanged(id: Int) = when (id) {
+  private fun axeChanged(id: Int) = when (id) {
     0 -> V3(x, y, z)
     1 -> V3(x, z, -y)
     2 -> V3(x, -z, y)
