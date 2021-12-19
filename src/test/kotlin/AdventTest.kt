@@ -9,6 +9,7 @@ internal class AdventTest {
       val out = catchSystemOut { AdventDay.all[idx].solve() }
       assertEquals(expect, out)
     }
+    println("Passed tests for ${expectedOutputs.size} days")
   }
 
   private val expectedOutputs = mutableListOf(
@@ -36,5 +37,6 @@ internal class AdventTest {
     "847\n333794664059\n",
     "3916\n2986\n",
     "2501\n4935\n",
+    "467\n12226\n",
   )
 }

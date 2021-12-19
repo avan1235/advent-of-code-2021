@@ -60,3 +60,4 @@ language constructions.
 | [Day 16: Packet Decoder](https://adventofcode.com/2021/day/16) | [Day16.kt](./src/main/kotlin/Day16.kt)  | [Day 16 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-16/) | `by notNull()`, delegated properties, `Sequence<T>`, date parsing  |
 | [Day 17: Trick Shot](https://adventofcode.com/2021/day/17) | [Day17.kt](./src/main/kotlin/Day17.kt)  | [Day 17 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-17/) | simulation, physics, immutable data  |
 | [Day 18: Snailfish](https://adventofcode.com/2021/day/18) | [Day18.kt](./src/main/kotlin/Day18.kt)  | [Day 18 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-18/) | tree, `reduce`, traversal, `lateinit var` |
+| [Day 19: Beacon Scanner](https://adventofcode.com/2021/day/19) | [Day19.kt](./src/main/kotlin/Day19.kt)  | [Day 19 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-19/) | 3D rotation, matching, `infix fun`, named block |
