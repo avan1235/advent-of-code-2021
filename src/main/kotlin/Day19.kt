@@ -52,12 +52,12 @@ private class ScannersMatcher(val scanners: List<Scanner>, val minCommon: Int) {
     val from = scanners[ft.fromId]
     for (t in TRANSFORMS) {
       val to = scanners[ft.toId] transformBy t
-      val shs = buildSet {
-        for (fb in from.beacons) for (tb in to.beacons) add(fb - tb)
+      val diffs = buildSet {
+        for (fb in from.beacons) for (tb in to.beacons) add(tb - fb)
       }
-      for (sh in shs) {
-        val cnt = to.beacons.count { vb -> (vb + sh) in from.beacons }
-        if (cnt >= minCommon) return t.copy(shift = sh).also { cachedPair[ft] = it }
+      for (diff in diffs) {
+        val cnt = to.beacons.count { tb -> (tb - diff) in from.beacons }
+        if (cnt >= minCommon) return t.copy(shift = -diff).also { cachedPair[ft] = it }
       }
     }
     return null
@@ -99,6 +99,7 @@ private data class V3(val x: Int, val y: Int, val z: Int) {
 
   operator fun plus(v3: V3) = V3(x + v3.x, y + v3.y, z + v3.z)
   operator fun minus(v3: V3) = V3(x - v3.x, y - v3.y, z - v3.z)
+  operator fun unaryMinus() = ZERO - this
 
   companion object {
     val ZERO = V3(0, 0, 0)
