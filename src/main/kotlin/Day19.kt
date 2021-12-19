@@ -30,8 +30,8 @@ private class ScannersMatcher(val scanners: List<Scanner>, val minCommon: Int) {
     val beacons = from.beacons.toMutableSet()
     val scan = mutableMapOf<Int, V3>().also { it[from.id] = V3.ZERO }
 
-    val paired = hashSetOf(from.id)
-    val toPair = (scanners.map { it.id } - paired).toHashSet()
+    val paired = mutableSetOf(from.id)
+    val toPair = (scanners.map { it.id } - paired).toMutableSet()
 
     while (toPair.isNotEmpty()) {
       search@ for (fromId in paired) for (toId in toPair) {
@@ -51,7 +51,7 @@ private class ScannersMatcher(val scanners: List<Scanner>, val minCommon: Int) {
     triedToPair[ft] = true
     val from = scanners[ft.fromId]
     for (t in TRANSFORMS) {
-      val to = scanners[ft.toId] transformBy t
+      val to = t(scanners[ft.toId])
       val diffs = buildSet {
         for (fb in from.beacons) for (tb in to.beacons) add(tb - fb)
       }
@@ -94,7 +94,7 @@ private data class V3(val x: Int, val y: Int, val z: Int) {
     else -> error("Invalid axeChanged id")
   }
 
-  infix fun transformBy(by: T) = axeChanged(by.id / 4).axeRotated(by.id % 4) + by.shift
+  infix fun transformedBy(by: T) = axeChanged(by.id / 4).axeRotated(by.id % 4) + by.shift
 
   operator fun plus(v3: V3) = V3(x + v3.x, y + v3.y, z + v3.z)
   operator fun minus(v3: V3) = V3(x - v3.x, y - v3.y, z - v3.z)
@@ -106,10 +106,10 @@ private data class V3(val x: Int, val y: Int, val z: Int) {
   }
 }
 
-private operator fun List<V3.T>.invoke(v: V3) = foldRight(v) { t, v3 -> v3 transformBy t }
-
 private class Scanner(val id: Int, val beacons: Set<V3>) {
-  infix fun transformBy(t: V3.T) = Scanner(id, beacons.map { it transformBy t }.toHashSet())
   override fun equals(other: Any?) = (other as? Scanner)?.id == id
   override fun hashCode() = id
 }
+
+private operator fun List<V3.T>.invoke(v: V3) = foldRight(v) { t, v3 -> v3 transformedBy t }
+private operator fun V3.T.invoke(s: Scanner) = Scanner(s.id, s.beacons.map { it transformedBy this }.toSet())
