@@ -61,3 +61,4 @@ language constructions.
 | [Day 17: Trick Shot](https://adventofcode.com/2021/day/17) | [Day17.kt](./src/main/kotlin/Day17.kt)  | [Day 17 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-17/) | simulation, physics, immutable data  |
 | [Day 18: Snailfish](https://adventofcode.com/2021/day/18) | [Day18.kt](./src/main/kotlin/Day18.kt)  | [Day 18 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-18/) | tree, `reduce`, traversal, `lateinit var` |
 | [Day 19: Beacon Scanner](https://adventofcode.com/2021/day/19) | [Day19.kt](./src/main/kotlin/Day19.kt)  | [Day 19 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-19/) | 3D rotation, matching, `infix fun`, named block |
+| [Day 20: Trench Map](https://adventofcode.com/2021/day/20) | [Day20.kt](./src/main/kotlin/Day20.kt)  | [Day 20 Blog Post](https://kotlin-dev.ml/post/advent-of-code-2021-20/) | `infix fun`, `operator fun`, extension properties, `IntRange` |

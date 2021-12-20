@@ -38,5 +38,6 @@ internal class AdventTest {
     "3916\n2986\n",
     "2501\n4935\n",
     "467\n12226\n",
+    "4928\n16605\n",
   )
 }
