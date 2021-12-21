@@ -59,7 +59,7 @@ private data class Player(val idx: Int, val position: Int, val points: Long) {
 }
 
 private data class DiceGame(val now: Player, val last: Player, val toPoints: Long) {
-  fun move(rolled: Int): DiceGame = DiceGame(last, now.move(rolled), toPoints)
+  fun move(rolled: Int): DiceGame = copy(now = last, last = now.move(rolled))
   fun looser(): Player? = if (last.points >= toPoints) now else null
   fun winner(): Player? = if (last.points >= toPoints) last else null
 }
