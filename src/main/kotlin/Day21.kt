@@ -46,7 +46,7 @@ private fun simulateQuantumGame(p1: Player, p2: Player): Map<Int, Long> {
 }
 
 private fun generateDiceNumbers() = generateSequence(0) { it + 1 }
-  .map { it % 100 + 1 }.windowed(size = 3, step = 3).map { it.sum() }
+  .map { it % 100 + 1 }.windowed(size = 3, step = 3) { it.sum() }
 
 private fun String.toPlayer() = removePrefix("Player ").run {
   val idx = takeWhile { it.isDigit() }.toInt()
