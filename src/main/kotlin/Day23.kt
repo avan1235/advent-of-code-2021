@@ -4,14 +4,15 @@ object Day23 : AdventDay() {
     val extraLines = listOf("  #D#C#B#A#", "  #D#B#A#C#")
 
     data.findMinEnergy(maxRow = 3).printIt()
-    data.addExtraLines(extraLines).findMinEnergy(maxRow = 3 + extraLines.size).printIt()
+    data.addExtraLines(extraLines, startFrom = 3)
+      .findMinEnergy(maxRow = 3 + extraLines.size).printIt()
   }
 }
 
-private fun List<String>.addExtraLines(lines: List<String>) = buildList {
-  this@addExtraLines.take(3).forEach { add(it) }
+private fun List<String>.addExtraLines(lines: List<String>, startFrom: Int) = buildList {
+  this@addExtraLines.take(startFrom).forEach { add(it) }
   lines.forEach { add(it) }
-  this@addExtraLines.drop(3).forEach { add(it) }
+  this@addExtraLines.drop(startFrom).forEach { add(it) }
 }
 
 private class WayDescription(val collides: Set<F>, val steps: Int)
