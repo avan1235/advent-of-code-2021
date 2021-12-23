@@ -105,6 +105,11 @@ private data class MapState(val positions: Map<F, AmphiodType>) {
   }
 }
 
+private enum class ModelField { Wall, Space, Used }
+private enum class AmphiodType(val energy: Int, val col: Int) {
+  A(1, 3), B(10, 5), C(100, 7), D(1000, 9)
+}
+
 private data class F(val x: Int, val y: Int, private val maxRow: Int) {
   val isHallway = y == 1
   val isFinalColumn = x in FINAL_COLUMNS
@@ -115,13 +120,8 @@ private data class F(val x: Int, val y: Int, private val maxRow: Int) {
   private fun f(x: Int, y: Int) = copy(x = x, y = y)
 
   companion object {
-    private val FINAL_COLUMNS = setOf(3, 5, 7, 9)
+    private val FINAL_COLUMNS = AmphiodType.values().map { it.col }.toHashSet()
   }
-}
-
-private enum class ModelField { Wall, Space, Used }
-private enum class AmphiodType(val energy: Int, val col: Int) {
-  A(1, 3), B(10, 5), C(100, 7), D(1000, 9)
 }
 
 private fun Char.toModelField(f: F) = when {
