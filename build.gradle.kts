@@ -28,3 +28,8 @@ dependencies {
   implementation(kotlin("reflect"))
   testImplementation(kotlin("test"))
 }
+
+tasks.withType<Test> {
+  minHeapSize = "1g"
+  maxHeapSize = "2g"
+}
