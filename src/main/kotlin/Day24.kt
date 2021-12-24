@@ -43,10 +43,10 @@ private class ReverseDigits(private val mapping: List<LazyDefaultMap<Long, Mutab
     if (idx in mapping.indices) mapping[idx][value] else emptySet()
 }
 
-private fun List<Instr>.reverseDigitsMappings(searchMax: Long = 1 shl 16): ReverseDigits =
+private fun List<Instr>.reverseDigitsMappings(searchMax: Long = 1 shl 15): ReverseDigits =
   groupSeparatedBy(separator = { it is Inp }, includeSeparator = true) { instr ->
     LazyDefaultMap<Long, MutableSet<ReverseDigits.StartingWith>>(::mutableSetOf).also { finishedWith ->
-      for (forDigit in 1L..9L) for (forZ in 0L..searchMax)
+      for (forZ in 0L..searchMax) for (forDigit in 1L..9L)
         ALU(forDigit, withState = mapOf("z" to forZ)).apply { run(instr) }
           .registers["z"].let { finishedWith[it].add(ReverseDigits.StartingWith(forZ, forDigit)) }
     }
