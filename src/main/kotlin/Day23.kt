@@ -1,3 +1,6 @@
+import java.util.*
+import kotlin.collections.ArrayDeque
+
 object Day23 : AdventDay() {
   override fun solve() {
     val data = reads<String>() ?: return
@@ -61,19 +64,27 @@ private fun scanPaths(start: F, positions: Set<F>, map: Map<F, ModelField>): Def
   return path.also { go(start) }
 }
 
-private fun List<String>.findMinEnergy(maxRow: Int): Int {
+private fun List<String>.findMinEnergy(maxRow: Int): Long? {
+  data class Reached(val state: MapState, val energy: Long)
+
   val mapDescription = toMapDescription(maxRow)
-  val mapStateMinEnergy = DefaultMap(Int.MAX_VALUE, hashMapOf(toMapState(maxRow) to 0))
-  while (true) {
-    val foundNew = mapStateMinEnergy.keys.toList().sumOf { from ->
-      from.reachable(mapDescription).count { (to, energy) ->
-        val energyUpdate = (mapStateMinEnergy[from] + energy)
-        (energyUpdate < mapStateMinEnergy[to]).also { if (it) mapStateMinEnergy[to] = energyUpdate }
-      }
+  val mapState = toMapState(maxRow)
+
+  val dist = DefaultMap<MapState, Long>(Long.MAX_VALUE).also { it[mapState] = 0 }
+  val queue = PriorityQueue(compareBy(Reached::energy)).also { it += Reached(mapState, 0) }
+
+  while (queue.isNotEmpty()) {
+    val curr = queue.remove()
+    if (curr.state.isFinal) return dist[curr.state]
+
+    curr.state.reachable(mapDescription).forEach neigh@{ (to, energy) ->
+      val alt = dist[curr.state] + energy
+      if (alt >= dist[to]) return@neigh
+      dist[to] = alt
+      queue += Reached(to, alt)
     }
-    if (foundNew == 0) break
   }
-  return mapStateMinEnergy.filter { it.key.isFinal }.minOf { it.value }
+  return null
 }
 
 private data class MapStateChange(val mapState: MapState, val energy: Int)
