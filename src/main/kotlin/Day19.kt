@@ -4,7 +4,7 @@ import kotlin.math.absoluteValue
 object Day19 : AdventDay() {
   override fun solve() {
     val data = reads<String>() ?: return
-    val scanners = data.groupSeparatedBy("") { it.toScanner() }
+    val scanners = data.groupSeparatedBy(separator = { it == "" }) { it.toScanner() }
 
     val matcher = ScannersMatcher(scanners, minCommon = 12)
     val start = scanners.first()

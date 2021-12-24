@@ -18,7 +18,7 @@ object Day4 : AdventDay() {
       ?: throw IllegalArgumentException("No order defined in data: $this")
 
   private fun List<String>.extractBoards() =
-    drop(1).groupSeparatedBy("") { it.toBoard<Int>() }
+    drop(1).groupSeparatedBy(separator = { it == "" }) { it.toBoard<Int>() }
 }
 
 private class Game<V>(val order: List<V>, val boards: List<Board<V>>) {

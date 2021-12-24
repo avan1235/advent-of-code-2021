@@ -13,13 +13,14 @@ inline fun <reified T> String.separated(by: String): List<T> = split(by).map { i
 fun <T> T.printIt() = also { println(it) }
 
 fun <U, V> List<U>.groupSeparatedBy(
-  separator: U,
+  separator: (U) -> Boolean,
+  includeSeparator: Boolean = false,
   transform: (List<U>) -> V
 ): List<V> = sequence {
   var curr = mutableListOf<U>()
   forEach {
-    if (it == separator && curr.isNotEmpty()) yield(transform(curr))
-    if (it == separator) curr = mutableListOf()
+    if (separator(it) && curr.isNotEmpty()) yield(transform(curr))
+    if (separator(it)) curr = if (includeSeparator) mutableListOf(it) else mutableListOf()
     else curr += it
   }
   if (curr.isNotEmpty()) yield(transform(curr))
@@ -40,6 +41,8 @@ class DefaultMap<K, V>(
   override fun get(key: K): V = map.getOrDefault(key, default).also { map[key] = it }
   operator fun plus(kv: Pair<K, V>): DefaultMap<K, V> = (map + kv).toDefaultMap(default)
   override fun toString() = map.toString()
+  override fun hashCode() = map.hashCode()
+  override fun equals(other: Any?) = map == other
 }
 
 fun <K, V> Map<K, V>.toDefaultMap(default: V) = DefaultMap(default, toMutableMap())
@@ -51,6 +54,8 @@ class LazyDefaultMap<K, V>(
   override fun get(key: K): V = map.getOrDefault(key, default()).also { map[key] = it }
   operator fun plus(kv: Pair<K, V>): LazyDefaultMap<K, V> = (map + kv).toLazyDefaultMap(default)
   override fun toString() = map.toString()
+  override fun hashCode() = map.hashCode()
+  override fun equals(other: Any?) = map == other
 }
 
 fun <K, V> Map<K, V>.toLazyDefaultMap(default: () -> V) = LazyDefaultMap(default, toMutableMap())
